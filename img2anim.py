@@ -1,12 +1,9 @@
 from imutils.perspective import four_point_transform
 import numpy as np
+import argparse
 import imutils
 import math
 import cv2
-
-COLS = 2
-ROWS = 2
-IMAGE_PATH = "images/pizarra.png"
 
 def get_board_points(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -30,6 +27,7 @@ def get_board_points(image):
             maxContourArea = cv2.contourArea(c)
 
     return boardPoints
+
 
 def get_sprites_from_board(image, cols, rows, m = 0):
 
@@ -127,6 +125,7 @@ def filter_max_figures(sprites):
 
     return max_contours
 
+
 def generate_animation_texture(sprites):
 
     # Get spites shape to generate the matrix of the full animation image
@@ -145,6 +144,20 @@ def generate_animation_texture(sprites):
 
     return anim
 
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-i", "--input", required=True, help="Path to the input image")
+ap.add_argument("-o", "--output", required=True, help="Path to the output image")
+ap.add_argument("-c", "--columns", required=True, type=int, help="Number of columns in the input image")
+ap.add_argument("-r", "--rows", required=True, type=int, help="Number of rows in the input image")
+
+args = vars(ap.parse_args())
+
+IMAGE_PATH = args['input']
+ANIMATION_PATH = args['output']
+COLS = args['columns']
+ROWS = args['rows']
+
 # Load image
 img = cv2.imread(IMAGE_PATH)
 
@@ -155,7 +168,7 @@ original = img.copy()
 img = imutils.resize(img, height=500)
 
 # Show the original image
-cv2.imshow("Original image", img)
+#cv2.imshow("Original image", img)
 
 # Get board points
 board_points = get_board_points(img)
@@ -176,8 +189,9 @@ anim = generate_animation_texture(max_contours)
 anim[np.where((anim==[255,255,255]).all(axis=2))] = [255,255,0]
 
 # Show the animation texture
-cv2.imshow("Animation texture", anim)
-cv2.waitKey(0)
+#cv2.imshow("Animation texture", anim)
+#cv2.waitKey(0)
 
 # Withe the texture in a file
-cv2.imwrite("anims/test.png", anim)
+cv2.imwrite(ANIMATION_PATH, anim)
+print("Animation stored in: {}".format(ANIMATION_PATH))

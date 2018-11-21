@@ -5,7 +5,7 @@ frames of an animation. From this image, a new one is generated in which has sep
 The generated image is intended to be used to load an animation.
 
 <p align="center">
-  <img width="400" height="300" src="images/pizarra.png">
+  <img width="400" height="300" src="images/board.png">
   <img width="400" height="300" src="anims/test.png">
 </p>
 
